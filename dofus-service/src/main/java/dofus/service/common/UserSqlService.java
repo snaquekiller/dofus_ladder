@@ -1,17 +1,17 @@
-package getln.service.common;
+package dofus.service.common;
 
 import java.util.Objects;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
+import data.entity.QUser;
+import data.entity.User;
+import data.service.UserPersistenceService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import getln.data.entity.QUser;
-import getln.data.entity.User;
-import getln.data.service.UserPersistenceService;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -32,7 +32,7 @@ public class UserSqlService implements org.springframework.security.core.userdet
      * @return
      */
     public User createUser(final String email, final String name, final String firstname, final String pseudo,
-            final String password) {
+                           final String password) {
         Objects.requireNonNull(email);
         final long count = this.userPersistenceService.count(QUser.user.email.eq(email));
         if (count == 0L) {

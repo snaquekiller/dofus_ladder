@@ -1,19 +1,19 @@
-package getln.data.entity;
+package data.entity;
 
-import java.util.Date;
+
+import data.commons.AbstractJpaEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import getln.data.commons.AbstractJpaEntity;
+import java.util.Date;
 
 /**
  * .
  */
 @Entity
-@Table(name = "dofus_player", schema = "LN")
+@Table(name = "dofus_succes", schema = "LN")
 @lombok.Data
-public class Player extends AbstractJpaEntity<Long> {
+public class PlayerSucces extends AbstractJpaEntity<Long> {
 
     private int number = 0;
 
@@ -25,11 +25,11 @@ public class Player extends AbstractJpaEntity<Long> {
 
     private String serveur;
 
-    private long xp;
+    private long succes;
 
     private Date creationDate = new Date();
 
-    public Player() {
+    public PlayerSucces() {
     }
 
 

@@ -1,4 +1,4 @@
-package getln.data.service;
+package data.service;
 
 import java.io.Serializable;
 

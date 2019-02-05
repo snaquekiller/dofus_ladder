@@ -22,7 +22,7 @@ public class TestController {
 
 
 //    @RequestMapping(value = "/test/dofus", method = RequestMethod.GET)
-//    public List<Player> dofus(
+//    public List<PlayerXp> dofus(
 //            @RequestParam(required = false, defaultValue = "0") final String filePath) throws Exception {
 //        log.info("split image ={}", filePath);
 //        return scrapClassement.scanLastScanOutPage();

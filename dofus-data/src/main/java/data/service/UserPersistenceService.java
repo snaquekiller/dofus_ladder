@@ -1,6 +1,6 @@
-package getln.data.service;
+package data.service;
 
-import getln.data.entity.User;
+import data.entity.User;
 import org.springframework.stereotype.Service;
 
 /**

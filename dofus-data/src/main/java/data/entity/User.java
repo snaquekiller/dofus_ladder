@@ -1,4 +1,4 @@
-package getln.data.entity;
+package data.entity;
 
 import java.util.Collection;
 import java.util.List;
@@ -7,11 +7,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import data.commons.AbstractDeletableJpaEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import getln.data.commons.AbstractDeletableJpaEntity;
 import lombok.ToString;
 
 /**

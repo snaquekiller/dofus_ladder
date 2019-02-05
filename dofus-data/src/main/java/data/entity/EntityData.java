@@ -1,4 +1,4 @@
-package getln.data.entity;
+package data.entity;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

@@ -1,11 +1,10 @@
 package dofus.service.scrap;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
+import data.entity.PlayerSucces;
+import data.entity.PlayerXp;
+import data.service.PlayerSuccesPersistenceService;
+import data.service.PlayerXpPersistenceService;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,9 +12,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
-import getln.data.entity.Player;
-import getln.data.service.PlayerPersistenceService;
-import lombok.extern.slf4j.Slf4j;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * .
@@ -26,19 +27,80 @@ public class ScrapClassement extends ScrapService {
 
 
     @Inject
-    private PlayerPersistenceService playerPersistenceService;
+    private PlayerXpPersistenceService playerXpPersistenceService;
+
+    @Inject
+    private PlayerSuccesPersistenceService playerSuccesPersistenceService;
 
 
-    String url = "https://www.dofus.com/fr/mmorpg/communaute/ladder-temps-reel/general";
+    private static String GLOBAL_LADDER_XP = "https://www.dofus.com/fr/mmorpg/communaute/ladder-temps-reel/general";
+    private static String GLOBAL_LADDER_SUCCES = "https://www.dofus.com/fr/mmorpg/communaute/ladder-temps-reel/succes";
+
+    private static final String CLASS_LADDER = "https://www.dofus.com/fr/mmorpg/communaute/ladder-temps-reel/general?breeds=%s&name=#jt_list";
+    private static final String CLASS_LADDER_SUCCES = "https://www.dofus.com/fr/mmorpg/communaute/ladder-temps-reel/succes?breeds=%s&name=#jt_list";
 
 
     /**
      * Get all manga from the news page
      */
-    public List<Player> scanLastScanOutPage()
-            throws IOException {
+    public List<PlayerXp> scanAll() throws IOException {
+        List<PlayerXp> playerXps = scanOneXp(GLOBAL_LADDER_XP);
+        for (int i = 0; i < 18; i++) {
+            playerXps.addAll(scanOneXp(String.format(CLASS_LADDER, i)));
+        }
+        List<PlayerSucces> playerSucces = scanOneSucces(GLOBAL_LADDER_SUCCES);
+        for (int i = 0; i < 18; i++) {
+            playerSucces.addAll(scanOneSucces(String.format(CLASS_LADDER_SUCCES, i)));
+        }
+        return playerXps;
+    }
+
+
+    /**
+     * Get all manga from the news page
+     */
+    public List<PlayerSucces> scanOneSucces(String url) throws IOException {
         try {
-            List<Player> players = new ArrayList<>();
+            List<PlayerSucces> playerXps = new ArrayList<>();
+            Connection connect = Jsoup.connect(url);
+            final Document doc = addInfo(connect).get();
+            Element body = doc.getElementsByClass("ak-main-content").get(0).getElementsByTag("tbody").get(0);
+            Elements tr = body.getElementsByTag("tr");
+
+            tr.forEach(element -> {
+                int rank = Integer
+                        .parseInt(element.getElementsByClass("ak-rank").get(0).getElementsByTag("span").text());
+                String name = element.getElementsByClass("ak-name").get(0).getElementsByClass("ak-character-name").get(0).text();
+                String classe = element.getElementsByTag("td").get(3).text();
+                int level = Integer
+                        .parseInt(element.getElementsByClass("ak-level").get(0).text());
+                String serveur = element.getElementsByTag("td").get(2).text();
+                long sucees = Long
+                        .parseLong(element.getElementsByTag("td").get(5).text().replace(" ", ""));
+                PlayerSucces playerXp = new PlayerSucces();
+                playerXp.setClasse(classe);
+                playerXp.setName(name);
+                playerXp.setNiveau(level);
+                playerXp.setServeur(serveur);
+                playerXp.setSucces(sucees);
+                playerXp.setNumber(rank);
+
+                PlayerSucces save = playerSuccesPersistenceService.save(playerXp);
+                playerXps.add(save);
+            });
+            return playerXps;
+        } catch (final Exception e) {
+            log.error("can't scrap the GLOBAL_LADDER_XP ={}", GLOBAL_LADDER_XP, e);
+            throw e;
+        }
+    }
+
+    /**
+     * Get all manga from the news page
+     */
+    public List<PlayerXp> scanOneXp(String url) throws IOException {
+        try {
+            List<PlayerXp> playerXps = new ArrayList<>();
             Connection connect = Jsoup.connect(url);
             final Document doc = addInfo(connect).get();
             Element body = doc.getElementsByClass("ak-main-content").get(0).getElementsByTag("tbody").get(0);
@@ -53,21 +115,21 @@ public class ScrapClassement extends ScrapService {
                         .parseInt(element.getElementsByClass("ak-level").get(0).text());
                 String serveur = element.getElementsByTag("td").get(4).text();
                 long total = Long
-                        .parseLong(element.getElementsByClass("ak-xp-total").get(0).text().replace(" ",""));
-                Player player = new Player();
-                player.setClasse(classe);
-                player.setName(name);
-                player.setNiveau(level);
-                player.setServeur(serveur);
-                player.setXp(total);
-                player.setNumber(rank);
+                        .parseLong(element.getElementsByClass("ak-xp-total").get(0).text().replace(" ", ""));
+                PlayerXp playerXp = new PlayerXp();
+                playerXp.setClasse(classe);
+                playerXp.setName(name);
+                playerXp.setNiveau(level);
+                playerXp.setServeur(serveur);
+                playerXp.setXp(total);
+                playerXp.setNumber(rank);
 
-                Player save = playerPersistenceService.save(player);
-                players.add(save);
+                PlayerXp save = playerXpPersistenceService.save(playerXp);
+                playerXps.add(save);
             });
-            return players;
+            return playerXps;
         } catch (final Exception e) {
-            log.error("can't scrap the url ={}", url, e);
+            log.error("can't scrap the GLOBAL_LADDER_XP ={}", GLOBAL_LADDER_XP, e);
             throw e;
         }
     }

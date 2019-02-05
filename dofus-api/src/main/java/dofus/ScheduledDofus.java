@@ -33,7 +33,7 @@ public class ScheduledDofus {
     @Scheduled(cron = "${cron.task.dofus}")
     public void newMangaCron() throws IOException {
         //        log.info("The time is now {}", dateFormat.format(new Date()));
-        this.scrapClassement.scanLastScanOutPage();
+        this.scrapClassement.scanAll();
     }
 
 

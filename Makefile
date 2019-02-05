@@ -6,3 +6,5 @@ dev: ## springboot run
 
 db:
 	docker-compose up --build
+build:
+    mvn clean install

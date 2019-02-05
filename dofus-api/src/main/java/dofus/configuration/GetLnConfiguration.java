@@ -8,7 +8,7 @@ import dofus.GetLnJob;
 import dofus.controller.ApiControllerInterface;
 import dofus.service.ApiService;
 import getln.data.DofusData;
-import getln.service.common.SqlService;
+import dofus.service.common.SqlService;
 
 //@formatter:off
 @Configuration
