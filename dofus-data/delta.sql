@@ -11,7 +11,7 @@ CREATE TABLE LN.dofus_player
 );
 
 
-CREATE TABLE LN.dofus_xp
+CREATE TABLE LN.dofus_succes
 (
   id            BIGINT(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(150),

@@ -4,13 +4,13 @@ import Cookies from "js-cookie";
 
 export const configs = {
   dev: {
-    domain: "http://localhost:9666"
+    domain: "http://localhost:9665"
   },
   stg: {
-    domain: "http://localhost:9666"
+    domain: "http://localhost:9665"
   },
   prd: {
-    domain: "http://localhost:9666"
+    domain: "http://localhost:9665"
   }
 };
 export const env = window.pageEnv || "dev";
@@ -42,7 +42,18 @@ class ConfigUri {
     return configs[env].domain + endPoint;
   }
   static get(url) {
-    return axios.get(url, { headers: this.getHeaders() });
+    return axios
+      .get(url, this.getHeaders())
+      .then(response => {
+        return response;
+      })
+      .catch(error => {
+        if (error.response.status === 401) {
+          Cookies.remove("token");
+        }
+        console.error("error", error);
+        return null;
+      });
   }
   static post(url, data) {
     return axios.post(url, data, this.getHeaders());

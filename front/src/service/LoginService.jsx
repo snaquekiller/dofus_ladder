@@ -16,7 +16,7 @@ export default {
     loginPromise.then(response => {
       if (response.data) {
         const token = response.data.access_token;
-        Cookies.set("token", token, { expires: 7 });
+        Cookies.set("token", token, { expires: 1 });
       }
     });
 

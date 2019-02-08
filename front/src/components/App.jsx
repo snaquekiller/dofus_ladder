@@ -6,10 +6,12 @@ import FormControl from "react-bootstrap/lib/FormControl";
 import ControlLabel from "react-bootstrap/lib/ControlLabel";
 import Panel from "react-bootstrap/lib/Panel";
 import styled from "styled-components";
-import { Modal } from "react-overlays";
+import { observer } from "mobx-react";
 
 import MangaUrl from "./MangaUrl.jsx";
+import Cookies from "js-cookie";
 import LoginForm from "./LoginForm.jsx";
+import LoginStore from "../store/LoginStore.js";
 
 const backdropStyle = {
   position: "fixed",
@@ -41,50 +43,29 @@ const modalStyle = function() {
   };
 };
 
+@observer
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       showModal: false
     };
-
-    this.close = () => {
-      this.setState({ showModal: false });
-    };
-
-    this.open = () => {
-      this.setState({ showModal: true });
-    };
+    this.updateCookie = this.updateCookie.bind(this);
   }
 
-  renderBackdrop(props) {
-    return <div {...props} style={backdropStyle} />;
+  updateCookie() {
+    LoginStore.refreshToken();
   }
 
   render() {
     return (
       <div style={{ textAlign: "center" }}>
-        <h1>Welcome to the Send To Reader</h1>
-        <Button bsStyle="primary" onClick={this.open}>
-          Connect
-        </Button>
-        <Modal
-          onHide={this.close}
-          style={modalStyle()}
-          aria-labelledby="modal-label"
-          show={this.state.showModal}
-          renderBackdrop={this.renderBackdrop}
-        >
-          <div>
-            <h4 id="modal-label">Text in a modal</h4>
-            <p>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </p>
-          </div>
-        </Modal>
-
-        <LoginForm />
-        <MangaUrl />
+        <h1>Welcome to Dofus Ladder</h1>
+        {!LoginStore.token ? (
+          <LoginForm login={this.updateCookie} />
+        ) : (
+          <MangaUrl />
+        )}
       </div>
     );
   }

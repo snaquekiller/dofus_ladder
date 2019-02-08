@@ -1,11 +1,12 @@
 package data.entity;
 
-import data.commons.AbstractJpaEntity;
-
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import data.commons.AbstractJpaEntity;
 
 
 /**
@@ -16,7 +17,8 @@ import javax.persistence.Table;
 @lombok.Data
 public class PlayerXp extends AbstractJpaEntity<Long> {
 
-    private int number = 0;
+    @Column(name="number")
+    private int position = 0;
 
     private String name;
 

@@ -37,8 +37,8 @@ export default class LoginForm extends React.Component {
   }
 
   login() {
-    LoginService.login(this.state.login, this.state.password).then(mangaGet => {
-      console.log("manga", mangaGet);
+    LoginService.login(this.state.login, this.state.password).then(() => {
+      this.props.login();
     });
   }
 

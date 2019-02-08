@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class TemporalData {
 
-    private int number = 0;
+    private int position = 0;
 
     private String classe;
 

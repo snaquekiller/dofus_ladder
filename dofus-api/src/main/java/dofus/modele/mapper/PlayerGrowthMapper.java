@@ -1,14 +1,14 @@
 package dofus.modele.mapper;
 
-import data.entity.PlayerXp;
-import dofus.modele.PlayerGrowthDto;
-import dofus.modele.TemporalData;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+
+import data.entity.PlayerXp;
+import dofus.modele.PlayerGrowthDto;
+import dofus.modele.TemporalData;
 
 public class PlayerGrowthMapper {
 
@@ -20,7 +20,7 @@ public class PlayerGrowthMapper {
         playerGrowthDto.setName(playerXp.getName());
         playerGrowthDto.setNiveau(playerXp.getNiveau());
         playerGrowthDto.setServeur(playerXp.getServeur());
-        playerGrowthDto.setNumber(playerXp.getNumber());
+        playerGrowthDto.setNumber(playerXp.getPosition());
 
         HashMap<Date, TemporalData> xpDate = new LinkedHashMap<>();
         AtomicLong lastXp = new AtomicLong(0);
@@ -30,7 +30,7 @@ public class PlayerGrowthMapper {
             temporalData.setNiveau(player1.getNiveau());
             long xp = player1.getXp();
             temporalData.setXp(xp);
-            temporalData.setNumber(player1.getNumber());
+            temporalData.setPosition(player1.getPosition());
             temporalData.setAugmentation(xp - lastXp.get());
             lastXp.set(xp);
             xpDate.put(player1.getCreationDate(), temporalData);
