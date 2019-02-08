@@ -17,6 +17,8 @@ ADD dofus-data /code/
 ADD dofus-service /code/
 
 RUN cd /code
+
+RUN ls -al *
 RUN ["mvn", "dependency:resolve"]
 RUN ["mvn", "verify"]
 RUN ["mvn", "package"]
