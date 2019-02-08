@@ -19,8 +19,8 @@ ADD dofus-service /code/dofus-service
 WORKDIR /code
 
 RUN ls -al *
-RUN ["mvn", "dependency:resolve"]
-RUN ["mvn", "verify"]
+#RUN ["mvn", "dependency:resolve"]
+#RUN ["mvn", "verify"]
 RUN ["mvn", "package"]
 
 
