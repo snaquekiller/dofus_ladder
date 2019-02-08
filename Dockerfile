@@ -16,12 +16,15 @@ ADD dofus-api /code/dofus-api
 ADD dofus-data /code/dofus-data
 ADD dofus-service /code/dofus-service
 
-RUN cd /code
+WORKDIR /code
 
 RUN ls -al *
 RUN ["mvn", "dependency:resolve"]
 RUN ["mvn", "verify"]
 RUN ["mvn", "package"]
+
+
+WORKDIR /
 
 RUN mkdir /app
 
