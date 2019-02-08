@@ -11,6 +11,18 @@ services:
       - MARIADB_ROOT_PASSWORD=pwd123
     volumes:
       - 'mariadb_data:/bitnami'
+  dofus-api:
+    build:
+      context: .
+    container_name: dofus-api
+    ports:
+      - 9665:9665
+      - 8189:8000
+    command: "java -jar
+               -Djava.security.egd=file:/dev/./urandom \
+               -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000 -Dserver.port=9665 \
+               -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap \
+               /app/dofus-api.jar"
 #  postfix:
 #    container_name: getLn-postfix
 #    image: tozd/postfix

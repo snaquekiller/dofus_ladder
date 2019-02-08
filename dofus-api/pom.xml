@@ -152,6 +152,7 @@
 
 
   <build>
+    <finalName>dofus-api</finalName>
     <sourceDirectory>src/main/java</sourceDirectory>
     <!-- Turn on filtering by default for application properties -->
     <plugins>
