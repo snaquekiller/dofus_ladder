@@ -15,6 +15,8 @@ ADD pom.xml /code/pom.xml
 ADD dofus-api /code/
 ADD dofus-data /code/
 ADD dofus-service /code/
+
+RUN cd /code
 RUN ["mvn", "dependency:resolve"]
 RUN ["mvn", "verify"]
 RUN ["mvn", "package"]
