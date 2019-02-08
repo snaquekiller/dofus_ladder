@@ -12,7 +12,9 @@ RUN apt-get install -y maven
 ADD pom.xml /code/pom.xml
 
 # Adding source, compile and package into a fat jar
-ADD src /code/src
+ADD dofus-api /code/
+ADD dofus-data /code/
+ADD dofus-service /code/
 RUN ["mvn", "dependency:resolve"]
 RUN ["mvn", "verify"]
 RUN ["mvn", "package"]
