@@ -5,7 +5,7 @@ RUN apk add --update curl && rm -rf /var/cache/apk/*
 ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN mvn clean install
+RUN ls * -al
 RUN mkdir /app
 
 ADD ./dofus-api/target/dofus-api.jar /app/dofus-api.jar
