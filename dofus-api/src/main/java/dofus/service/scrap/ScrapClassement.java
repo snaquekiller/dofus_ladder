@@ -80,8 +80,10 @@ public class ScrapClassement extends ScrapService {
                 String name = element.getElementsByClass("ak-name").get(0).getElementsByClass("ak-character-name")
                         .get(0).text();
                 String classe = element.getElementsByTag("td").get(3).text();
-                int level = Integer
-                        .parseInt(element.getElementsByClass("ak-level").get(0).text());
+                String text = element.getElementsByClass("ak-level").get(0).text();
+                int level = text.contains("Omega") ? Integer
+                        .parseInt(text.replaceAll("[^\\d.]", "")) + 200 : Integer
+                        .parseInt(text);
                 String serveur = element.getElementsByTag("td").get(2).text();
                 long sucees = Long
                         .parseLong(element.getElementsByTag("td").get(5).text().replace(" ", ""));
