@@ -18,17 +18,13 @@ ADD dofus-service /code/dofus-service
 
 WORKDIR /code
 
-RUN ls -al *
-#RUN ["mvn", "dependency:resolve"]
-#RUN ["mvn", "verify"]
 RUN ["mvn", "package"]
-
 
 WORKDIR /
 
 RUN mkdir /app
 
-ADD /code/dofus-api/target/dofus-api.jar /app/dofus-api.jar
+RUN mv /code/dofus-api/target/dofus-api.jar /app/
 RUN rm -rf /code
 
 
