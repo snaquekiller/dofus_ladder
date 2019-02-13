@@ -1,26 +1,27 @@
-CREATE TABLE LN.dofus_player
-(
-  name VARCHAR(150),
-  classe VARCHAR(150),
-  serveur VARCHAR(150),
-  niveau VARCHAR(11),
-  xp BIGINT(20),
-  creation_date DATETIME,
-  number INT(11),
-  id BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT
-);
+CREATE TABLE IF NOT EXISTS `LN.dofus_player` (
+  `name` varchar(150) DEFAULT NULL,
+  `classe` varchar(150) DEFAULT NULL,
+  `serveur` varchar(150) DEFAULT NULL,
+  `niveau` varchar(11) DEFAULT NULL,
+  `xp` bigint(20) DEFAULT NULL,
+  `creation_date` datetime DEFAULT NULL,
+  `number` int(11) DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+)
 
 
 CREATE TABLE LN.dofus_succes
 (
-  id            BIGINT(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(150),
-    classe VARCHAR(150),
-    serveur VARCHAR(150),
-    niveau INT,
-    succes BIGINT,
-    creation_date DATETIME,
-    number INT
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(150) DEFAULT NULL,
+  `classe` varchar(150) DEFAULT NULL,
+  `serveur` varchar(150) DEFAULT NULL,
+  `niveau` int(11) DEFAULT NULL,
+  `succes` bigint(20) DEFAULT NULL,
+  `creation_date` datetime DEFAULT NULL,
+  `number` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 );
 
 
