@@ -23,5 +23,5 @@ public class PlayerGrowthDto {
 
     private Date creationDate = new Date();
 
-    private HashMap<Date, TemporalData> xpDate;
+    private HashMap<Date, PlayerTemporalData> xpDate;
 }

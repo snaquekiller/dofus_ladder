@@ -7,14 +7,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
@@ -33,7 +37,9 @@ import data.service.PlayerXpPersistenceService;
 import dofus.modele.PlayerDto;
 import dofus.modele.PlayerGrowthDto;
 import dofus.modele.PlayerGrowthDtoGraph;
+import dofus.modele.PlayerTemporalData;
 import dofus.modele.mapper.PlayerGrowthMapper;
+import dofus.modele.mapper.PlayerTemporalDataMapper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -46,6 +52,9 @@ public class DofusController {
 
     @Inject
     private PlayerXpPersistenceService playerXpPersistenceService;
+
+    @PersistenceContext
+    private EntityManager mainEntityManager;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd HH:mm");
 
@@ -162,7 +171,7 @@ public class DofusController {
     @RequestMapping(value = "/player/compare/graph", method = RequestMethod.GET)
     public List<HashMap<String, String>> playerCompareGraph(
             @RequestParam(required = true) final String name,
-            @RequestParam(required = false) @Max(1000) final Date start,
+            @RequestParam(required = false) final Date start,
             @RequestParam(required = false) final Date end,
             @RequestParam(required = false, defaultValue = "1") @Min(1) final int page,
             @RequestParam(required = false, defaultValue = "2") @Min(1) @Max(5) final int compare,
@@ -205,7 +214,7 @@ public class DofusController {
             playerDto.setClasse(playerXp.getClasse());
             playerDto.setCreationDate(playerXp.getCreationDate());
             playerDto.setName(playerXp.getClasse());
-            playerDto.setNiveau(playerXp.getNiveau());
+            playerDto.setNiveau(playerXp.getLevel());
             playerDto.setNumber(playerXp.getPosition());
             playerDto.setServeur(playerXp.getServeur());
             playerDto.setXp(playerXp.getXp());
@@ -258,6 +267,54 @@ public class DofusController {
             }
         });
         return lastGraphData;
+    }
+
+
+    /**
+     * List reviewers.
+     *
+     * @return the reviewers response
+     */
+    @RequestMapping(value = "/top100", method = RequestMethod.GET)
+    public List<PlayerTemporalData> top(@RequestParam(required = false) final Date start,
+            @RequestParam(required = false) final Date end) {
+        // @formatter:on
+
+        DateTime endDate = new DateTime();
+        if (end != null) {
+            endDate = new DateTime(end);
+        }
+        BooleanExpression predicate =
+                QPlayerXp.playerXp.creationDate.after(endDate.minusMinutes(4).toDate())
+                        .and(QPlayerXp.playerXp.creationDate.before(endDate.toDate()));
+        final JPAQuery<PlayerXp> query = new JPAQuery<PlayerXp>(mainEntityManager);
+        List<PlayerXp> top100 = query.select(QPlayerXp.playerXp).from(QPlayerXp.playerXp).where(predicate)
+                .groupBy(QPlayerXp.playerXp.name).limit(100)
+                .orderBy(QPlayerXp.playerXp.xp.desc(), QPlayerXp.playerXp.creationDate.desc()).fetch();
+
+        log.info("Found these PLayer for the top100 = {}", top100);
+
+        DateTime startDate = new DateTime().minusDays(2);
+        if (start != null) {
+            startDate = new DateTime(start);
+        }
+        BooleanExpression oldDate =
+                QPlayerXp.playerXp.creationDate.after(startDate.minusMinutes(30).toDate())
+                        .and(QPlayerXp.playerXp.creationDate.before(startDate.toDate()));
+        List<PlayerTemporalData> temporalDatas = new LinkedList<>();
+        top100.forEach(playerXp -> {
+            BooleanExpression playerPredicate = QPlayerXp.playerXp.name.eq(playerXp.getName()).and(oldDate);
+            PageRequest pageRequest2 = PageRequest.of(0, 1, Direction.fromString("desc"), "creationDate");
+            Page<PlayerXp> onePlayer = playerXpPersistenceService.findAll(playerPredicate, pageRequest2);
+            List<PlayerXp> content = onePlayer.getContent();
+            if (content.size() > 0) {
+                PlayerXp playerXp1 = content.get(0);
+                log.info("Found the player for the top100 = {} and his old= {}", playerXp, playerXp1);
+                temporalDatas.add(PlayerTemporalDataMapper
+                        .map(playerXp, playerXp1.getXp(), playerXp1.getPosition(), playerXp1.getLevel()));
+            }
+        });
+        return temporalDatas;
     }
 
     /**

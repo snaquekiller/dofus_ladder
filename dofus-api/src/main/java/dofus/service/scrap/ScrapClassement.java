@@ -130,7 +130,7 @@ public class ScrapClassement extends ScrapService {
                 PlayerXp playerXp = new PlayerXp();
                 playerXp.setClasse(classe);
                 playerXp.setName(name);
-                playerXp.setNiveau(level);
+                playerXp.setLevel(level);
                 playerXp.setServeur(serveur);
                 playerXp.setXp(total);
                 playerXp.setPosition(rank);

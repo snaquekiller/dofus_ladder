@@ -24,7 +24,8 @@ public class PlayerXp extends AbstractJpaEntity<Long> {
 
     private String classe;
 
-    private int niveau;
+    @Column(name="niveau")
+    private int level;
 
     private String serveur;
 

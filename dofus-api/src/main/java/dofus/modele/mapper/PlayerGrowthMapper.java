@@ -4,11 +4,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import data.entity.PlayerXp;
 import dofus.modele.PlayerGrowthDto;
-import dofus.modele.TemporalData;
+import dofus.modele.PlayerTemporalData;
 
 public class PlayerGrowthMapper {
 
@@ -18,21 +19,21 @@ public class PlayerGrowthMapper {
         playerGrowthDto.setClasse(playerXp.getClasse());
         playerGrowthDto.setCreationDate(playerXp.getCreationDate());
         playerGrowthDto.setName(playerXp.getName());
-        playerGrowthDto.setNiveau(playerXp.getNiveau());
+        playerGrowthDto.setNiveau(playerXp.getLevel());
         playerGrowthDto.setServeur(playerXp.getServeur());
         playerGrowthDto.setNumber(playerXp.getPosition());
 
-        HashMap<Date, TemporalData> xpDate = new LinkedHashMap<>();
+        HashMap<Date, PlayerTemporalData> xpDate = new LinkedHashMap<>();
         AtomicLong lastXp = new AtomicLong(0);
+        AtomicInteger oldPosition = new AtomicInteger(0);
+        AtomicInteger oldLevel = new AtomicInteger(0);
         playerXps.forEach(player1 -> {
-            TemporalData temporalData = new TemporalData();
-            temporalData.setClasse(player1.getClasse());
-            temporalData.setNiveau(player1.getNiveau());
-            long xp = player1.getXp();
-            temporalData.setXp(xp);
-            temporalData.setPosition(player1.getPosition());
-            temporalData.setAugmentation(xp - lastXp.get());
-            lastXp.set(xp);
+            PlayerTemporalData temporalData = PlayerTemporalDataMapper
+                    .map(player1, lastXp.get(), oldPosition.get(), oldLevel.get());
+
+            lastXp.set(player1.getXp());
+            oldPosition.set(player1.getPosition());
+            oldLevel.set(player1.getLevel());
             xpDate.put(player1.getCreationDate(), temporalData);
         });
         playerGrowthDto.setXpDate(xpDate);
