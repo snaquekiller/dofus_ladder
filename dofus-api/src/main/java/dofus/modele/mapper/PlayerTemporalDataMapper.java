@@ -18,7 +18,7 @@ public class PlayerTemporalDataMapper {
         temporalData.setXpAugmentation(player.getXp() - oldXp);
 
         temporalData.setPosition(player.getPosition());
-        temporalData.setPosition(player.getPosition() - oldPosition);
+        temporalData.setPositionAugmentation(oldPosition - player.getPosition());
 
         return temporalData;
     }

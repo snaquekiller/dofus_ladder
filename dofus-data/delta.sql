@@ -38,6 +38,11 @@ CREATE TABLE IF NOT EXISTS LN.user
   deleted       TINYINT(1)                      DEFAULT 0
 );
 
+
+create index if NOT EXISTS dofus_player_name_index on dofus_player(name);
+create index if NOT EXISTS dofus_player_date_index on dofus_player(creation_date);
+
+
 INSERT INTO LN.user (email, pseudo, nom, prenom, creation_date, update_date, deleted)
 VALUES ('nic.guitton@gmail.com', 'snaquekiller', 'guitton', 'nicolas
 ', '2018-02-07 17:14:44', '2018-02-07 17:14:44', 0);

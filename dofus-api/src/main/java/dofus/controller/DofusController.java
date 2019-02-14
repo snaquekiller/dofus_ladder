@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -287,6 +288,7 @@ public class DofusController {
         BooleanExpression predicate =
                 QPlayerXp.playerXp.creationDate.after(endDate.minusMinutes(4).toDate())
                         .and(QPlayerXp.playerXp.creationDate.before(endDate.toDate()));
+        log.info("Found these PLayer for the top100 = {}",predicate.toString() );
         final JPAQuery<PlayerXp> query = new JPAQuery<PlayerXp>(mainEntityManager);
         List<PlayerXp> top100 = query.select(QPlayerXp.playerXp).from(QPlayerXp.playerXp).where(predicate)
                 .groupBy(QPlayerXp.playerXp.name).limit(100)
@@ -300,15 +302,21 @@ public class DofusController {
         }
         BooleanExpression oldDate =
                 QPlayerXp.playerXp.creationDate.after(startDate.minusMinutes(30).toDate())
-                        .and(QPlayerXp.playerXp.creationDate.before(startDate.toDate()));
+                        .and(QPlayerXp.playerXp.creationDate.before(startDate.toDate())).and(QPlayerXp.playerXp.name.in(top100.stream().map(PlayerXp::getName).collect(
+                        Collectors.toList())));
+
+
+        final JPAQuery<PlayerXp> queryOld = new JPAQuery<>(mainEntityManager);
+        List<PlayerXp> top100Old = queryOld.select(QPlayerXp.playerXp).from(QPlayerXp.playerXp).where(oldDate)
+                .groupBy(QPlayerXp.playerXp.name).limit(100)
+                .orderBy(QPlayerXp.playerXp.xp.desc(), QPlayerXp.playerXp.creationDate.desc()).fetch();
         List<PlayerTemporalData> temporalDatas = new LinkedList<>();
         top100.forEach(playerXp -> {
-            BooleanExpression playerPredicate = QPlayerXp.playerXp.name.eq(playerXp.getName()).and(oldDate);
-            PageRequest pageRequest2 = PageRequest.of(0, 1, Direction.fromString("desc"), "creationDate");
-            Page<PlayerXp> onePlayer = playerXpPersistenceService.findAll(playerPredicate, pageRequest2);
-            List<PlayerXp> content = onePlayer.getContent();
-            if (content.size() > 0) {
-                PlayerXp playerXp1 = content.get(0);
+
+            Optional<PlayerXp> first = top100Old.stream()
+                    .filter(playerXp1 -> playerXp.getName().equals(playerXp1.getName())).findFirst();
+            if (first.isPresent()) {
+                PlayerXp playerXp1 = first.get();
                 log.info("Found the player for the top100 = {} and his old= {}", playerXp, playerXp1);
                 temporalDatas.add(PlayerTemporalDataMapper
                         .map(playerXp, playerXp1.getXp(), playerXp1.getPosition(), playerXp1.getLevel()));
