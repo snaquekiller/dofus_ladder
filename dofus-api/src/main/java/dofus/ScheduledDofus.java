@@ -32,8 +32,9 @@ public class ScheduledDofus {
 
     @Scheduled(cron = "${cron.task.dofus}")
     public void newMangaCron() throws IOException {
-                log.info("begin task dofus");
+        log.info("begin task dofus");
         this.scrapClassement.scanAll();
+        log.info("end task dofus");
     }
 
 }

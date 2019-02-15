@@ -16,7 +16,7 @@ server:
   port: 9665
 
 cron.task:
-  dofus:  0 */5 * * * ?
+  dofus:  0 0/10 * * * ?
 logging:
   level:
     ROOT: INFO
