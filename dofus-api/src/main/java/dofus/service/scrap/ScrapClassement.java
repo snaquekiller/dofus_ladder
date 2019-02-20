@@ -47,7 +47,7 @@ public class ScrapClassement extends ScrapService {
      */
     public List<PlayerXp> scanAll() throws IOException {
         List<PlayerXp> playerXps = new ArrayList<>();
-        for (int j = 1; j < 20; j++) {
+        for (int j = 1; j < 25; j++) {
             playerXps = scanOneXp(String.format(GLOBAL_LADDER_XP, j));
 //            for (int i = 1; i < 18; i++) {
 //                playerXps.addAll(scanOneXp(String.format(CLASS_LADDER, i, j)));

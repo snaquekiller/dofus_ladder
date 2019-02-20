@@ -40,8 +40,6 @@ import dofus.modele.mapper.PlayerGrowthMapper;
 import dofus.modele.mapper.PlayerTemporalDataMapper;
 import lombok.extern.slf4j.Slf4j;
 
-import static java.lang.Math.toIntExact;
-
 /**
  * .
  */
@@ -235,8 +233,8 @@ public class DofusController {
         final JPAQuery<PlayerXp> queryData = new JPAQuery<>(mainEntityManager);
         List<PlayerXp> allData = queryData.select(QPlayerXp.playerXp).from(QPlayerXp.playerXp)
                 .where(predicate.and(datePredicate))
-                .groupBy(QPlayerXp.playerXp.creationDate.hour(), QPlayerXp.playerXp.name)
-                .limit(toIntExact(nbPoint + 2) * compare)
+                .groupBy(QPlayerXp.playerXp.creationDate.dayOfYear(),QPlayerXp.playerXp.creationDate.hour(), QPlayerXp.playerXp.name)
+//                .limit(toIntExact(nbPoint) * (compare*2+1))
                 .orderBy(QPlayerXp.playerXp.creationDate.desc()).fetch();
 
         //Create graph data from all player data
