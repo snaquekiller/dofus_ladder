@@ -8,13 +8,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import dofus.configuration.GetLnConfiguration;
+import dofus.configuration.DofusApiConfiguration;
 
 /**
  * @author Nicolas
  */
 @Configuration
-@Import({GetLnConfiguration.class})
+@Import({DofusApiConfiguration.class})
 @SpringBootApplication
 @EnableScheduling
 public class DofusLadder {

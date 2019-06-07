@@ -16,7 +16,9 @@ server:
   port: 9665
 
 cron.task:
-  dofus:  0 0/10 * * * ?
+  # https://crontab.guru/#1_1_1_1_1
+  #dofus:  0 0/10 * * * ?
+  dofus:  1 1 1 1 1 ?
 logging:
   level:
     ROOT: INFO

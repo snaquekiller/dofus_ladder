@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Import;
 import dofus.GetLnJob;
 import dofus.controller.ApiControllerInterface;
 import dofus.service.ApiService;
-import getln.data.DofusData;
+import data.DofusData;
 import dofus.service.common.SqlService;
 
 //@formatter:off
@@ -23,6 +23,6 @@ import dofus.service.common.SqlService;
 @SqlService
 @ApiService
 //@formatter:on
-public class GetLnConfiguration {
+public class DofusApiConfiguration {
 
 }
