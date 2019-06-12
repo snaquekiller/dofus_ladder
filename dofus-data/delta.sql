@@ -49,3 +49,5 @@ VALUES ('nic.guitton@gmail.com', 'snaquekiller', 'guitton', 'nicolas
 INSERT INTO LN.user (email, pseudo, nom, prenom, creation_date, update_date, deleted)
 VALUES ('nicolas.guitton@kindle.com', 'snaquekiller', 'guitton', 'nicolas
 ', '2018-02-07 17:14:44', '2018-02-07 17:14:44', 0);
+
+ALTER TABLE LN.user add role VARCHAR(100);

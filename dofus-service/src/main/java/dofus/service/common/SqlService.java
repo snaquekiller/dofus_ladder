@@ -11,7 +11,7 @@ import javax.inject.Qualifier;
 
 import org.springframework.context.annotation.ComponentScan;
 
-import getln.data.DofusData;
+import data.DofusData;
 
 /**
  * .
