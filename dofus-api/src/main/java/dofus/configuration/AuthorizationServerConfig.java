@@ -30,7 +30,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${spring.client.secret}")
     private String clientSecret;
 
-
     private static final String GRANT_TYPE_PASSWORD = "password";
     private static final String AUTHORIZATION_CODE = "authorization_code";
     private static final String REFRESH_TOKEN = "refresh_token";
