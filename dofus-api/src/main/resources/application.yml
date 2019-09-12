@@ -11,7 +11,7 @@ spring:
     password: pwd123
     type: com.zaxxer.hikari.HikariDataSource
     driverClassName: org.mariadb.jdbc.Driver
-
+url: "lightnovel.fr"
 server:
   port: 9665
 
