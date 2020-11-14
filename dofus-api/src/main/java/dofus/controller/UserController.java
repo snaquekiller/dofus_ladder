@@ -9,12 +9,14 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 
+import dofus.modele.PasswordDto;
 import dofus.service.MailService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
@@ -95,20 +97,38 @@ public class UserController {
         }
         String token = UUID.randomUUID().toString();
         userSqlService.createPasswordResetTokenForUser(user, token);
-        mailService.constructAndSend(appUrl ,request.getLocale(), token, user));
+        mailService.constructAndSend(appUrl ,request.getLocale(), token, user);
         return "Password Reset";
     }
 
 
     @RequestMapping(value = "/user/changePassword", method = RequestMethod.GET)
     public String showChangePasswordPage(Locale locale, Model model,
-            @RequestParam("id") long id, @RequestParam("token") String token) {
-        String result = passwordService.validatePasswordResetToken(id, token);
+            @RequestParam("id") long _id, @RequestParam("token") String _token) {
+        String result = passwordService.validatePasswordResetToken(_token);
         if (result != null) {
-            model.addAttribute("message", 
-            messages.getMessage("auth.message." + result, null, locale));
+            model.addAttribute("message", "Password changer :"+ result);
             return "redirect:/login?lang=" + locale.getLanguage();
         }
         return "redirect:/updatePassword.html?lang=" + locale.getLanguage();
+    }
+
+    @RequestMapping(value = "/user/savePassword", method = RequestMethod.POST)
+    public String savePassword(final Locale locale, @Valid PasswordDto _passwordDto) {
+
+        String result = passwordService.validatePasswordResetToken(_passwordDto.getToken());
+
+
+        if(result != null) {
+            throw new Exception("Token is not found");
+        }
+
+        Optional user = userSqlService.getUserByPasswordResetToken(_passwordDto.getToken());
+        if(user.isPresent()) {
+            userSqlService.changeUserPassword(user.get(), _passwordDto.getNewPassword());
+            return "Password reset success";
+        } else {
+            return "Failed to reset password";
+        }
     }
 }

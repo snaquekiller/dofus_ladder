@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import data.entity.PasswordResetToken;
+import data.entity.QPasswordResetToken;
 import data.entity.QUser;
 import data.entity.User;
 import data.service.PasswordResetTokenPersistenceService;
@@ -67,6 +68,11 @@ public class UserSqlService implements org.springframework.security.core.userdet
         log.info("Create a new password reset token for user : " + _user + "with token " + _token);
         PasswordResetToken myToken = new PasswordResetToken(_token, _user);
         passwordResetTokenPersistenceService.save(myToken);
+    }
+
+    public Optional<User> getUserByPasswordResetToken(final String _token) {
+
+        return Optional.ofNullable(passwordTokenRepository.findByToken(_token) .getUser());
     }
 
     @Override
