@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `LN.dofus_player` (
+CREATE TABLE IF NOT EXISTS LN.dofus_player (
   `name` varchar(150) DEFAULT NULL,
   `classe` varchar(150) DEFAULT NULL,
   `serveur` varchar(150) DEFAULT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `LN.dofus_player` (
   `number` int(11) DEFAULT NULL,
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-)
+);
 
 
 CREATE TABLE LN.dofus_succes

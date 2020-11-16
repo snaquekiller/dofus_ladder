@@ -114,7 +114,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/savePassword", method = RequestMethod.POST)
-    public String savePassword(final Locale locale, @Valid PasswordDto _passwordDto) {
+    public String savePassword(final Locale locale, @Valid PasswordDto _passwordDto) throws Exception {
 
         String result = passwordService.validatePasswordResetToken(_passwordDto.getToken());
 
@@ -123,7 +123,7 @@ public class UserController {
             throw new Exception("Token is not found");
         }
 
-        Optional user = userSqlService.getUserByPasswordResetToken(_passwordDto.getToken());
+        Optional<User> user = userSqlService.getUserByPasswordResetToken(_passwordDto.getToken());
         if(user.isPresent()) {
             userSqlService.changeUserPassword(user.get(), _passwordDto.getNewPassword());
             return "Password reset success";

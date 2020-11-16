@@ -57,12 +57,11 @@ public class User extends AbstractDeletableJpaEntity<Long> implements UserDetail
     public User() {
     }
 
-    public User(final String email, final String nom, final String prenom, final String pseudo, final String password) {
+    public User(final String email, final String nom, final String prenom, final String pseudo) {
         this.email = email;
         this.nom = nom;
         this.prenom = prenom;
         this.pseudo = pseudo;
-        this.password = password;
     }
 
 

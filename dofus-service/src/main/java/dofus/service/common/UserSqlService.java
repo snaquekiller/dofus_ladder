@@ -6,13 +6,15 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import data.entity.PasswordResetToken;
-import data.entity.QPasswordResetToken;
 import data.entity.QUser;
 import data.entity.User;
 import data.service.PasswordResetTokenPersistenceService;
 import data.service.UserPersistenceService;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,12 @@ public class UserSqlService implements org.springframework.security.core.userdet
 
     @Inject
     private PasswordResetTokenPersistenceService passwordResetTokenPersistenceService;
+
+    // put the same a the what is in SecurityConfiguration
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     /**
      * Create an user if the email is not already exist on the database
@@ -41,7 +49,8 @@ public class UserSqlService implements org.springframework.security.core.userdet
         Objects.requireNonNull(_email);
         final long count = this.userPersistenceService.count(QUser.user.email.eq(_email));
         if (count == 0L) {
-            final User user = new User(_email, _name, _firstname, _pseudo, _password);
+            final User user = new User(_email, _name, _firstname, _pseudo);
+            user.setPassword(passwordEncoder().encode(_password));
             return this.userPersistenceService.save(user);
         }
         return null;
@@ -72,7 +81,12 @@ public class UserSqlService implements org.springframework.security.core.userdet
 
     public Optional<User> getUserByPasswordResetToken(final String _token) {
 
-        return Optional.ofNullable(passwordTokenRepository.findByToken(_token) .getUser());
+        return Optional.ofNullable(passwordResetTokenPersistenceService.findByToken(_token) .getUser());
+    }
+
+    public void changeUserPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userPersistenceService.save(user);
     }
 
     @Override
