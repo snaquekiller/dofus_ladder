@@ -16,6 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 System.out.println(new BCryptPasswordEncoder().encode("test"));
 ```
 
+# Show update possible
+```bash
+mvn versions:display-dependency-updates
+```
 
 # Structure :
 

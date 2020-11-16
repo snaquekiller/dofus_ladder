@@ -85,7 +85,7 @@ public class UserSqlService implements org.springframework.security.core.userdet
     }
 
     public void changeUserPassword(User user, String password) {
-        user.setPassword(passwordEncoder.encode(password));
+        user.setPassword(passwordEncoder().encode(password));
         userPersistenceService.save(user);
     }
 
