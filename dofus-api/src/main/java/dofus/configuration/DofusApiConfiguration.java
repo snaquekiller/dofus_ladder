@@ -12,7 +12,7 @@ import dofus.service.common.SqlService;
 
 //@formatter:off
 @Configuration
-@Import({JpaConfiguration.class, NukeServletApiConfiguration.class
+@Import({JpaConfiguration.class, NukeServletApiConfiguration.class, GlobalSecurityConfiguration.class
 })
 @ComponentScan(basePackageClasses = {
         GetLnJob.class,

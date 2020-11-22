@@ -44,8 +44,8 @@ if "%HOME%" == "" (set "HOME=%HOMEDRIVE%%HOMEPATH%")
 @REM Execute a user defined script before this one
 if not "%MAVEN_SKIP_RC%" == "" goto skipRcPre
 @REM check for pre script, once with legacy .bat ending and once with .cmd ending
-if exist "%HOME%\mavenrc_pre.bat" call "%HOME%\mavenrc_pre.bat"
-if exist "%HOME%\mavenrc_pre.cmd" call "%HOME%\mavenrc_pre.cmd"
+if exist "%HOME%\mavenrcpre.bat" call "%HOME%\mavenrcpre.bat"
+if exist "%HOME%\mavenrcpre.cmd" call "%HOME%\mavenrcpre.cmd"
 :skipRcPre
 
 @setlocal
@@ -131,8 +131,8 @@ set ERROR_CODE=1
 
 if not "%MAVEN_SKIP_RC%" == "" goto skipRcPost
 @REM check for post script, once with legacy .bat ending and once with .cmd ending
-if exist "%HOME%\mavenrc_post.bat" call "%HOME%\mavenrc_post.bat"
-if exist "%HOME%\mavenrc_post.cmd" call "%HOME%\mavenrc_post.cmd"
+if exist "%HOME%\mavenrcpost.bat" call "%HOME%\mavenrcpost.bat"
+if exist "%HOME%\mavenrcpost.cmd" call "%HOME%\mavenrcpost.cmd"
 :skipRcPost
 
 @REM pause the script if MAVEN_BATCH_PAUSE is set to 'on'

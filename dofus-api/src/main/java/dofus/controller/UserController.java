@@ -18,11 +18,15 @@ import com.querydsl.jpa.impl.JPAQuery;
 
 import dofus.modele.PasswordDto;
 import dofus.service.MailService;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -73,6 +77,9 @@ public class UserController {
     @Inject
     private MailService mailService;
 
+    @Inject
+    private AuthenticationManager authenticationManager;
+
 
     /**
      * List reviewers.
@@ -84,6 +91,18 @@ public class UserController {
         final User user = userSqlService
                 .createUser(userRequestDto.getEmail(), userRequestDto.getNom(), userRequestDto.getPrenom(),
                         userRequestDto.getPseudo(), passwordService.encode(userRequestDto.getPassword()));
+        return user;
+    }
+
+    /**
+     * List reviewers.
+     *
+     * @return the reviewers response
+     */
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public User getUser(OAuth2Authentication auth2Authentication) {
+        final User user = ((User)((UserDetails) auth2Authentication));
+        log.info(user.getEmail());
         return user;
     }
 

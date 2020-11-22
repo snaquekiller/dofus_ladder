@@ -30,10 +30,8 @@ public class UserSqlService implements org.springframework.security.core.userdet
     private PasswordResetTokenPersistenceService passwordResetTokenPersistenceService;
 
     // put the same a the what is in SecurityConfiguration
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Inject
+    public PasswordEncoder passwordEncoder;
 
     /**
      * Create an user if the email is not already exist on the database
@@ -50,7 +48,7 @@ public class UserSqlService implements org.springframework.security.core.userdet
         final long count = this.userPersistenceService.count(QUser.user.email.eq(_email));
         if (count == 0L) {
             final User user = new User(_email, _name, _firstname, _pseudo);
-            user.setPassword(passwordEncoder().encode(_password));
+            user.setPassword(passwordEncoder.encode(_password));
             return this.userPersistenceService.save(user);
         }
         return null;
@@ -85,7 +83,7 @@ public class UserSqlService implements org.springframework.security.core.userdet
     }
 
     public void changeUserPassword(User user, String password) {
-        user.setPassword(passwordEncoder().encode(password));
+        user.setPassword(passwordEncoder.encode(password));
         userPersistenceService.save(user);
     }
 

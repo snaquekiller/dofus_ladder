@@ -7,6 +7,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 
+import static dofus.configuration.GlobalSecurityConfiguration.REQUIRE_ADMIN_ROLE;
+import static dofus.configuration.GlobalSecurityConfiguration.REQUIRE_USER_ROLE;
+
 /**
  * .
  */
@@ -25,8 +28,8 @@ public class Oauth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
     public void configure(HttpSecurity http) throws Exception {
         http.anonymous().disable()
             .authorizeRequests()
-            .antMatchers("/**").access(SecurityConfiguration.REQUIRE_USER_ROLE)
-            .antMatchers("/**").access(SecurityConfiguration.REQUIRE_ADMIN_ROLE)
+            .antMatchers("/**").access(REQUIRE_USER_ROLE)
+            .antMatchers("/**").access(REQUIRE_ADMIN_ROLE)
             .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
     }
 

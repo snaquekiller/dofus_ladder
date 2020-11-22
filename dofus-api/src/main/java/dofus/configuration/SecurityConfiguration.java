@@ -1,6 +1,7 @@
 package dofus.configuration;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,16 +25,11 @@ import dofus.service.common.UserSqlService;
 //@ComponentScan(basePackageClasses = {AccountService.class})
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    public static final String REQUIRE_ADMIN_ROLE = "hasRole('ROLE_ADMIN')";
-    public static final String REQUIRE_USER_ROLE = "hasRole('ROLE_USER')";
-
     @Resource
-    private UserSqlService userDetailsService;
+    private UserSqlService userSqlService;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Inject
+    public PasswordEncoder passwordEncoder;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -52,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     protected void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userSqlService).passwordEncoder(passwordEncoder);
     }
 
     @Override
